@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Painel do Palestrante — Kubrusly Basso Team</title>
+<style>
+  body { margin:0; background:#0b0b0c; color:#f4f4f5; font-family:-apple-system,system-ui,sans-serif; }
+  main { max-width:420px; margin:0 auto; padding:40px 18px; text-align:center; }
+  img { width:100%; max-width:360px; }
+  .spin { width:34px; height:34px; border:3px solid #3f3f46; border-top-color:#e9c46a; border-radius:50%; margin:20px auto; animation:r 1s linear infinite; }
+  @keyframes r { to { transform:rotate(360deg); } }
+  p { color:#a1a1aa; line-height:1.5; }
+</style>
+</head>
+<body>
+<main>
+  <img src="../logo.png" alt="Kubrusly Basso Team">
+  <div class="spin"></div>
+  <p id="msg">Abrindo o painel do palestrante…</p>
+</main>
+<script>
+// Leva ao painel (com login) no link do dia publicado pelo Mac em url.json.
+async function go() {
+  try {
+    const cfg = await (await fetch("../url.json?t=" + Date.now(), { cache: "no-store" })).json();
+    if (cfg.url) {
+      const r = await fetch(cfg.url + "/info?t=" + Date.now(), { cache: "no-store" });
+      if (r.ok) { location.replace(cfg.url + "/palestrante"); return; }
+    }
+  } catch (e) {}
+  document.getElementById("msg").innerHTML = "O sistema está desligado.<br>Abra o app <b>Live Tradução</b> no Mac.<br>Esta página tenta de novo sozinha.";
+  setTimeout(go, 8000);
+}
+go();
+</script>
+</body>
+</html>
